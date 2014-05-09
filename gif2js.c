@@ -10,9 +10,12 @@
 
 void render_js(GifFileType *gif)
 {
-     GifWord width = gif->SWidth;
-     GifWord height = gif->SHeight;
-     unsigned char *img = gif->SavedImages[0].RasterBits;
+     SavedImage *img = &(gif->SavedImages[0]);
+
+     GifWord width = img->ImageDesc.Width;
+     GifWord height = img->ImageDesc.Height;
+
+     unsigned char *imgBits = img->RasterBits;
 
      int xx, yy;
 
@@ -24,7 +27,7 @@ void render_js(GifFileType *gif)
 
           for(xx = 0; xx < width; xx++) {
                printf("%d%s",
-                      img[xx + (yy * width)],
+                      imgBits[xx + (yy * width)],
                       (xx == (width - 1)) ? "" : ",");
           }
 

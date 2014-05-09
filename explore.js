@@ -31,12 +31,12 @@ function drawMap(ofsX, ofsY)
     for(var x = 0; x < xSize; x++) {
         for(var y = 0; y < ySize; y++) {
 
-            var row = mapdata[x + ofsX];
+            var row = mapdata[y + ofsY];
 
             var cell = null;
 
             if (row != null)
-                cell = row[y + ofsY];
+                cell = row[x + ofsX];
 
             if (cell == null)
                 cell = 0;
