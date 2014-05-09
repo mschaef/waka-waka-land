@@ -1,6 +1,15 @@
 
 var ctx;
 var tiles;
+var penguin;
+
+var pcX = 195;
+var pcY = 79;
+
+var mapX = 184;
+var mapY = 68;
+
+var pcTol = 4;
 
 var tileMap = [
     2,    // void
@@ -13,6 +22,17 @@ var tileMap = [
     12    // desert
 ];
 
+var passable = [
+    true, // void
+    false,// deep water
+    false,// medium water
+    true, // shallow water
+    true, // plains
+    false,// lava
+    false,// mountain
+    true  // desert
+];
+
 function drawTile(mX, mY, tileId)
 {
     var tileOfs = 32 * tileId;
@@ -23,38 +43,70 @@ function drawTile(mX, mY, tileId)
     ctx.drawImage(tiles, tileX, tileY, 32, 32, mX * 32, mY *32, 32, 32);    
 }
 
-function drawMap(ofsX, ofsY)
+function canvasWidth()
 {
-    var xSize = Math.floor(ctx.canvas.width / 32);
-    var ySize = Math.floor(ctx.canvas.height / 32);
-
-    for(var x = 0; x < xSize; x++) {
-        for(var y = 0; y < ySize; y++) {
-
-            var row = mapdata[y + ofsY];
-
-            var cell = null;
-
-            if (row != null)
-                cell = row[x + ofsX];
-
-            if (cell == null)
-                cell = 0;
-
-            drawTile(x, y, tileMap[cell]);
-        }
-    }
+    return Math.floor(ctx.canvas.width / 32);
 }
 
-var xPos = 0;
-var yPos = 0;
-
-function moveMap(dX, dY)
+function canvasHeight()
 {
-    xPos = xPos + dX;
-    yPos = yPos + dY;
+    return Math.floor(ctx.canvas.height / 32);
+}
 
-    drawMap(xPos, yPos);
+function cellAt(x, y)
+{
+    var row = mapdata[y];
+
+    var cell = null;
+
+    if (row != null)
+        cell = row[x];
+
+    if (cell == null)
+        cell = 0;
+
+    return cell;
+}
+
+function drawMap(ofsX, ofsY)
+{
+    var width = canvasWidth();
+    var height = canvasHeight();
+
+    for(var x = 0; x < width; x++) {
+        for(var y = 0; y < height; y++) {
+
+            drawTile(x, y, tileMap[cellAt(x + ofsX, y + ofsY)]);
+        }
+    }
+
+    ctx.drawImage(penguin, (pcX - mapX) * 32, (pcY - mapY) * 32);
+}
+
+function movePc(dX, dY)
+{
+    var nX = pcX + dX;
+    var nY = pcY + dY;
+
+    if (!passable[cellAt(nX, nY)])
+        return;
+
+    pcX = nX;
+    pcY = nY;
+
+    if (pcX < (mapX + pcTol))
+        mapX = mapX - pcTol;
+
+    if (pcY < (mapY + pcTol))
+        mapY = mapY - pcTol;
+
+    if (pcX > (mapX + canvasWidth() - pcTol))
+        mapX = mapX + pcTol;
+
+    if (pcY > (mapY + canvasHeight() - pcTol))
+        mapY = mapY + pcTol;
+
+    drawMap(mapX, mapY);
 }
 
 function onDocumentReady()
@@ -65,25 +117,25 @@ function onDocumentReady()
         var kc = e.keyCode;
 
         if (kc == 38) // up
-            moveMap(0, -1);
+            movePc(0, -1);
         else if (kc == 40) // down
-            moveMap(0, 1);
+            movePc(0, 1);
         else if (kc == 39) // right
-            moveMap(1, 0);
+            movePc(1, 0);
         else if (kc == 37) // left
-            moveMap(-1, 0);
-
+            movePc(-1, 0);
     });
 
     ctx = example[0].getContext('2d');
 
     tiles = new Image();
+    tiles.src = "pics/dg_grounds32.gif";
 
-    tiles.src="pics/dg_grounds32.gif";
+    penguin = new Image();
+    penguin.src = "pics/penguin.png";
 
-    
     tiles.onload = function() {
-        drawMap(0,0);
+        movePc(0,0);
     };
 };
 
