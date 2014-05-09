@@ -1,18 +1,31 @@
 
+var ctx;
+var tiles;
+
+function drawTile(mX, mY, tileId)
+{
+    var tileOfs = 32 * tileId;
+
+    var tileX = tileOfs % 288;
+    var tileY = Math.floor(tileOfs / 288) * 288;
+
+    ctx.drawImage(tiles, tileX, tileY, 32, 32, mX * 32, mY *32, 32, 32);    
+}
+
 
 function onDocumentReady()
 {
     var example = document.getElementById('map');
-    var context = example.getContext('2d');
-    context.fillStyle = 'red';
-    context.fillRect(30, 30, 50, 50);
 
-    var tiles = new Image();
+    ctx = example.getContext('2d');
+
+    tiles = new Image();
 
     tiles.src="pics/dg_grounds32.gif";
 
     tiles.onload = function() {
-        context.drawImage(tiles, 69, 50);
+        for(var ii = 0; ii < 10; ii++)
+            drawTile(ii, ii, ii);
     };
 };
 
