@@ -13,6 +13,12 @@ function drawTile(mX, mY, tileId)
     ctx.drawImage(tiles, tileX, tileY, 32, 32, mX * 32, mY *32, 32, 32);    
 }
 
+function drawEmptyTile(mX, mY, tileId)
+{
+    ctx.fillStyle = 'black';
+    ctx.fillRect(mX * 32, mY * 32, mX * 32 + 32, mY * 32 + 32);
+}
+
 function drawMap(ofsX, ofsY)
 {
     var xSize = Math.floor(ctx.canvas.width / 32);
@@ -20,7 +26,18 @@ function drawMap(ofsX, ofsY)
 
     for(var x = 0; x < xSize; x++) {
         for(var y = 0; y < ySize; y++) {
-            drawTile(x, y, mapdata[x + ofsX][y + ofsY]);
+
+            var row = mapdata[x + ofsX];
+
+            var cell = null;
+
+            if (row != null)
+                cell = row[y + ofsY];
+
+            if (cell == null)
+                drawEmptyTile(x, y);
+            else
+                drawTile(x, y, cell);
         }
     }
 }
