@@ -13,23 +13,53 @@ function drawTile(mX, mY, tileId)
     ctx.drawImage(tiles, tileX, tileY, 32, 32, mX * 32, mY *32, 32, 32);    
 }
 
+function drawMap(ofsX, ofsY)
+{
+    for(var x = 0; x < 10; x++) {
+        for(var y = 0; y < 10; y++) {
+            drawTile(x, y, mapdata[x + ofsX][y + ofsY]);
+        }
+    }
+}
+
+var xPos = 0;
+var yPos = 0;
+
+function moveMap(dX, dY)
+{
+    xPos = xPos + dX;
+    yPos = yPos + dY;
+
+    drawMap(xPos, yPos);
+}
 
 function onDocumentReady()
 {
-    var example = document.getElementById('map');
+    var example = $('#map');
 
-    ctx = example.getContext('2d');
+    $(document).keydown(function(e) {
+        var kc = e.keyCode;
+
+        if (kc == 38) // up
+            moveMap(0, -1);
+        else if (kc == 40) // down
+            moveMap(0, 1);
+        else if (kc == 39) // right
+            moveMap(1, 0);
+        else if (kc == 37) // left
+            moveMap(-1, 0);
+
+    });
+
+    ctx = example[0].getContext('2d');
 
     tiles = new Image();
 
     tiles.src="pics/dg_grounds32.gif";
 
+    
     tiles.onload = function() {
-        for(var x = 0; x < 10; x++) {
-            for(var y = 0; y < 10; y++) {
-                drawTile(x, y, mapdata[x][y]);
-            }
-        }
+        drawMap(0,0);
     };
 };
 
