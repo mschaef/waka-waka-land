@@ -2,6 +2,16 @@
 var ctx;
 var tiles;
 
+var tileMap = [
+    2,    // void
+    20,   // deep water
+    18,   // medium water
+    15,   // shallow water
+    9,    // plains
+    36,   // lava
+    117,  // mountain
+    12    // desert
+];
 
 function drawTile(mX, mY, tileId)
 {
@@ -11,12 +21,6 @@ function drawTile(mX, mY, tileId)
     var tileY = Math.floor(tileOfs / 288) * 32;
 
     ctx.drawImage(tiles, tileX, tileY, 32, 32, mX * 32, mY *32, 32, 32);    
-}
-
-function drawEmptyTile(mX, mY, tileId)
-{
-    ctx.fillStyle = 'black';
-    ctx.fillRect(mX * 32, mY * 32, mX * 32 + 32, mY * 32 + 32);
 }
 
 function drawMap(ofsX, ofsY)
@@ -35,9 +39,9 @@ function drawMap(ofsX, ofsY)
                 cell = row[y + ofsY];
 
             if (cell == null)
-                drawEmptyTile(x, y);
-            else
-                drawTile(x, y, cell);
+                cell = 0;
+
+            drawTile(x, y, tileMap[cell]);
         }
     }
 }
