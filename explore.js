@@ -15,8 +15,11 @@ function drawTile(mX, mY, tileId)
 
 function drawMap(ofsX, ofsY)
 {
-    for(var x = 0; x < 10; x++) {
-        for(var y = 0; y < 10; y++) {
+    var xSize = Math.floor(ctx.canvas.width / 32);
+    var ySize = Math.floor(ctx.canvas.height / 32);
+
+    for(var x = 0; x < xSize; x++) {
+        for(var y = 0; y < ySize; y++) {
             drawTile(x, y, mapdata[x + ofsX][y + ofsY]);
         }
     }
