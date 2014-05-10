@@ -1,7 +1,10 @@
 
 var ctx;
 var tiles;
+var edgingTiles;
 var penguin;
+
+var mapContents;
 
 var pcX = 195;
 var pcY = 79;
@@ -53,9 +56,9 @@ function canvasHeight()
     return Math.floor(ctx.canvas.height / 32);
 }
 
-function cellAt(x, y)
+function cellAt(map, x, y, defaultCell)
 {
-    var row = mapdata[y];
+    var row = map[y];
 
     var cell = null;
 
@@ -63,7 +66,7 @@ function cellAt(x, y)
         cell = row[x];
 
     if (cell == null)
-        cell = 0;
+        cell = defaultCell;
 
     return cell;
 }
@@ -76,7 +79,14 @@ function drawMap(ofsX, ofsY)
     for(var x = 0; x < width; x++) {
         for(var y = 0; y < height; y++) {
 
-            drawTile(x, y, tileMap[cellAt(x + ofsX, y + ofsY)]);
+            drawTile(x, y, tileMap[cellAt(mapdata, x + ofsX, y + ofsY, 0)]);
+
+            var obj = cellAt(mapContents, x + ofsX, y + ofsY);
+
+            if (obj != null) {
+                obj.draw(x, y);
+            }
+
         }
     }
 
@@ -88,13 +98,20 @@ function movePc(dX, dY)
     var nX = pcX + dX;
     var nY = pcY + dY;
 
-    if (!passable[cellAt(nX, nY)])
+    if (!passable[cellAt(mapdata, nX, nY, 0)])
         return;
+
+    var obj = cellAt(mapContents, nX, nY);
+
+    if (obj != null) {
+        if(!obj.action())
+            return ;
+    }
 
     pcX = nX;
     pcY = nY;
 
-    if (pcX < (mapX + pcTol))
+    if (pcX <  (mapX + pcTol))
         mapX = mapX - pcTol;
 
     if (pcY < (mapY + pcTol))
@@ -109,8 +126,42 @@ function movePc(dX, dY)
     drawMap(mapX, mapY);
 }
 
+function setupContents()
+{
+    mapContents = [];
+
+    var ii, jj;
+
+    for(ii = 0; ii < mapdata.length; ii++) {
+        var row = [];
+        
+        for(jj = 0; jj < mapdata[0].length; jj++)
+            row.push(null);
+
+        mapContents.push(row);
+    }
+
+    addSign(192, 75, "Here are some mountains.");
+}
+
+function addSign(x, y, message)
+{
+    mapContents[y][x] = {
+        draw: function(oX, oY) {
+            ctx.drawImage(edgingTiles,
+                          160, 416, 32, 32, oX * 32, oY *32, 32, 32);    
+        },
+        action: function() {
+            alert("The sign says:\n\n" + message);
+            return false;
+        }
+    };
+}
+
 function onDocumentReady()
 {
+    setupContents();
+
     var example = $('#map');
 
     $(document).keydown(function(e) {
@@ -129,14 +180,16 @@ function onDocumentReady()
     ctx = example[0].getContext('2d');
 
     tiles = new Image();
-    tiles.src = "pics/dg_grounds32.gif";
-
+    edgingTiles = new Image();
     penguin = new Image();
-    penguin.src = "pics/penguin.png";
 
     tiles.onload = function() {
         movePc(0,0);
     };
+
+    tiles.src = "pics/dg_grounds32.gif";
+    edgingTiles.src = "pics/dg_edging132.gif";
+    penguin.src = "pics/penguin.png";
 };
 
 $(document).ready(onDocumentReady);
