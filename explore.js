@@ -142,6 +142,14 @@ function setupContents()
     }
 
     addSign(192, 75, "Here are some mountains.");
+    addSign(193, 80, "Welcome to Wakawaka land!\n\nPlease enjoy your stay.");
+    addSign(177, 79, "Maka-luka Gulf");
+    addSign(122, 72, "Mako-Maki Gulf");
+    addSign(250, 97, "Future site of Fish Town.");
+    addSign(225, 95, "Calm Beach");
+    addSign(254, 122, "Future site of Beach Town.");
+    addSign(177, 79, "Mount Greenland");
+    
 }
 
 function addSign(x, y, message)
