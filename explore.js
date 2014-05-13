@@ -202,5 +202,5 @@ function onDocumentLoaded()
     movePc(0,0);
 };
 
-$(document).load(onDocumentLoaded);
+$(window).load( onDocumentLoaded);
 
