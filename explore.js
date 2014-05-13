@@ -16,29 +16,18 @@ var mapY = 68;
 
 var pcTol = 4;
 
-var tileMap = [
-    2,    // void
-    20,   // deep water
-    18,   // medium water
-    15,   // shallow water
-    9,    // plains
-    36,   // lava
-    117,  // mountain
-    12,   // desert
-    51    // road
+var tileInfo = [
+    { name: "Void"         , iconId: 2  , passable: false },
+    { name: "Deep Water"   , iconId: 20 , passable: false },
+    { name: "Medium Water" , iconId: 18 , passable: false },
+    { name: "Shallow Water", iconId: 15 , passable: true  }, 
+    { name: "Plains"       , iconId: 9  , passable: true  }, 
+    { name: "Lava"         , iconId: 36 , passable: false },
+    { name: "Mountain"     , iconId: 117, passable: false },
+    { name: "Desert"       , iconId: 12 , passable: true  }, 
+    { name: "Road"         , iconId: 51 , passable: true  }
 ];
 
-var passable = [
-    false,// void
-    false,// deep water
-    false,// medium water
-    true, // shallow water
-    true, // plains
-    false,// lava
-    false,// mountain
-    true, // desert
-    true
-];
 
 function drawTile(mX, mY, tileId)
 {
@@ -83,7 +72,7 @@ function drawMap(ofsX, ofsY)
     for(var x = 0; x < width; x++) {
         for(var y = 0; y < height; y++) {
 
-            drawTile(x, y, tileMap[cellAt(mapdata, x + ofsX, y + ofsY, 0)]);
+            drawTile(x, y, tileInfo[cellAt(mapdata, x + ofsX, y + ofsY, 0)].iconId);
 
             var obj = cellAt(mapContents, x + ofsX, y + ofsY);
 
@@ -112,7 +101,7 @@ function movePc(dX, dY)
     var nX = pcX + dX;
     var nY = pcY + dY;
 
-    if (!passable[cellAt(mapdata, nX, nY, 0)])
+    if (!tileInfo[cellAt(mapdata, nX, nY, 0)].passable)
         return;
 
     var obj = cellAt(mapContents, nX, nY);
@@ -156,7 +145,7 @@ function setupContents()
     }
 
     addSign(192, 75, "Here are some mountains.");
-    addSign(193, 85, "Welcome to Wakawaka land!\n\nPlease enjoy your stay.");
+    addSign(194, 79, "Welcome to Wakawaka land!\n\nPlease enjoy your stay.");
 
     addSign(194, 95, "Mount Greenland");
 
