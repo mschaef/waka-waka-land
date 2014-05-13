@@ -195,20 +195,11 @@ function onDocumentReady()
 
     ctx = example[0].getContext('2d');
 
-    tiles = new Image();
-    edgingTiles = new Image();
-    penguin = new Image();
+    tiles = $("#imgTiles")[0];
+    edgingTiles = $("#imgEdging")[0];
+    penguin = $("#imgPenguin")[0];
 
-/*
-    tiles.onload = function() {
-        movePc(0,0);
-    };
-*/
-      movePc(0,0);
-
-    tiles.src = "pics/dg_grounds32.gif";
-    edgingTiles.src = "pics/dg_edging132.gif";
-    penguin.src = "pics/penguin.png";
+    movePc(0,0);
 };
 
 $(document).ready(onDocumentReady);
