@@ -146,7 +146,7 @@ function setupContents()
     addSign(192, 75, "Here are some mountains.");
     addSign(193, 85, "Welcome to Wakawaka land!\n\nPlease enjoy your stay.");
 
-    addSign(193, 80, "Mount Greenland");
+    addSign(194, 95, "Mount Greenland");
 
     addSign(177, 79, "Maka-luka Gulf");
     addSign(122, 72, "Mako-Maki Gulf");
