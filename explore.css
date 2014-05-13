@@ -1,0 +1,54 @@
+body,
+html { 
+  margin: 0;
+  padding: 0.25em;
+
+  background-color: #f7f7f7;
+  color: #000000;
+
+  font-size: 11pt;
+  text-align: center;
+} 
+
+img.resource {
+    display: none;
+}
+
+div#page_wrap {
+  width: 1152px;
+
+  margin: 0 auto;
+}
+
+div.main {
+  padding: 0.25em;
+  padding-right: 0.75em;
+  float: left;
+}
+
+div.content {
+}
+
+div.sidebar {
+  padding: 0.25em;
+
+  float: right;
+
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+div.header {
+  font-size: 18pt;
+  font-weight: bold;
+
+  border-style: none;
+  border-bottom-style: solid;
+  border-bottom-width: 1pt;
+
+  clear: both;
+  padding: 0px; 
+  margin: 0px auto;
+
+  text-align: center;
+} 
