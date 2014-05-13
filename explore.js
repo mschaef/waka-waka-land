@@ -1,8 +1,10 @@
 
 var ctx;
+var beCtx;
 var tiles;
 var edgingTiles;
 var penguin;
+var mapPic;
 
 var mapContents;
 
@@ -93,6 +95,17 @@ function drawMap(ofsX, ofsY)
     }
 
     ctx.drawImage(penguin, (pcX - mapX) * 32, (pcY - mapY) * 32);
+
+
+    beCtx.lineWidth = 2;
+    beCtx.strokeStyle = '#ff0000';
+
+    beCtx.drawImage(mapPic, 0, 0);
+    
+    beCtx.rect(mapX, mapY, width - 1, height - 1);
+    beCtx.stroke();
+
+    beCtx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 }
 
 function movePc(dX, dY)
@@ -178,7 +191,8 @@ function onDocumentLoaded()
 {
     setupContents();
 
-    var example = $('#map');
+    var mapCanvas = $('#map');
+    var beCanvas = $('#birdsEye');
 
     $(document).keydown(function(e) {
         var kc = e.keyCode;
@@ -193,11 +207,13 @@ function onDocumentLoaded()
             movePc(-1, 0);
     });
 
-    ctx = example[0].getContext('2d');
+    ctx = mapCanvas[0].getContext('2d');
+    beCtx = beCanvas[0].getContext('2d');
 
     tiles = $("#imgTiles")[0];
     edgingTiles = $("#imgEdging")[0];
     penguin = $("#imgPenguin")[0];
+    mapPic = $("#imgMap")[0];
 
     movePc(0,0);
 };
