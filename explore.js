@@ -97,15 +97,14 @@ function drawMap(ofsX, ofsY)
     ctx.drawImage(penguin, (pcX - mapX) * 32, (pcY - mapY) * 32);
 
 
+    beCtx.drawImage(mapPic, 0, 0);
+
     beCtx.lineWidth = 2;
     beCtx.strokeStyle = '#ff0000';
-
-    beCtx.drawImage(mapPic, 0, 0);
-    
+  
+    beCtx.beginPath();
     beCtx.rect(mapX, mapY, width - 1, height - 1);
     beCtx.stroke();
-
-    beCtx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 }
 
 function movePc(dX, dY)
