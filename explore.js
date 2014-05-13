@@ -199,9 +199,12 @@ function onDocumentReady()
     edgingTiles = new Image();
     penguin = new Image();
 
+/*
     tiles.onload = function() {
         movePc(0,0);
     };
+*/
+      movePc(0,0);
 
     tiles.src = "pics/dg_grounds32.gif";
     edgingTiles.src = "pics/dg_edging132.gif";
