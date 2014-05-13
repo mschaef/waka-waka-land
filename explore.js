@@ -174,7 +174,7 @@ function addSign(x, y, message)
     };
 }
 
-function onDocumentReady()
+function onDocumentLoaded()
 {
     setupContents();
 
@@ -202,5 +202,5 @@ function onDocumentReady()
     movePc(0,0);
 };
 
-$(document).ready(onDocumentReady);
+$(document).load(onDocumentLoaded);
 
