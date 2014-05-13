@@ -22,18 +22,20 @@ var tileMap = [
     9,    // plains
     36,   // lava
     117,  // mountain
-    12    // desert
+    12,   // desert
+    51    // road
 ];
 
 var passable = [
-    true, // void
+    false,// void
     false,// deep water
     false,// medium water
     true, // shallow water
     true, // plains
     false,// lava
     false,// mountain
-    true  // desert
+    true, // desert
+    true
 ];
 
 function drawTile(mX, mY, tileId)
@@ -142,13 +144,19 @@ function setupContents()
     }
 
     addSign(192, 75, "Here are some mountains.");
-    addSign(193, 80, "Welcome to Wakawaka land!\n\nPlease enjoy your stay.");
+    addSign(193, 85, "Welcome to Wakawaka land!\n\nPlease enjoy your stay.");
+
+    addSign(193, 80, "Mount Greenland");
+
     addSign(177, 79, "Maka-luka Gulf");
     addSign(122, 72, "Mako-Maki Gulf");
     addSign(250, 97, "Future site of Fish Town.");
     addSign(225, 95, "Calm Beach");
     addSign(254, 122, "Future site of Beach Town.");
-    addSign(177, 79, "Mount Greenland");
+
+    addSign(177, 45, "Welcome to Gumdrop Island.");
+
+    addSign(37, 176, "Welcome to the Capital City.");
     
 }
 
