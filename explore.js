@@ -17,15 +17,15 @@ var mapY = 68;
 var pcTol = 4;
 
 var tileInfo = [
-    { name: "Void"         , iconId: 2  , passable: false },
-    { name: "Deep Water"   , iconId: 20 , passable: false },
-    { name: "Medium Water" , iconId: 18 , passable: false },
-    { name: "Shallow Water", iconId: 15 , passable: true  }, 
-    { name: "Plains"       , iconId: 9  , passable: true  }, 
-    { name: "Lava"         , iconId: 36 , passable: false },
-    { name: "Mountain"     , iconId: 117, passable: false },
-    { name: "Desert"       , iconId: 12 , passable: true  }, 
-    { name: "Road"         , iconId: 51 , passable: true  }
+    { name: "Void"         , iconId: 2  , passable: false , inLegend: false },
+    { name: "Deep Water"   , iconId: 20 , passable: false , inLegend: true  },
+    { name: "Medium Water" , iconId: 18 , passable: false , inLegend: true  },
+    { name: "Shallow Water", iconId: 15 , passable: true  , inLegend: true  }, 
+    { name: "Plains"       , iconId: 9  , passable: true  , inLegend: true  }, 
+    { name: "Lava"         , iconId: 36 , passable: false , inLegend: true  },
+    { name: "Mountain"     , iconId: 117, passable: false , inLegend: true  },
+    { name: "Desert"       , iconId: 12 , passable: true  , inLegend: true  }, 
+    { name: "Road"         , iconId: 51 , passable: true  , inLegend: true  }
 ];
 
 
@@ -175,6 +175,45 @@ function addSign(x, y, message)
     };
 }
 
+function spriteMarkup(tileId)
+{
+    var tileOfs = 32 * tileId;
+
+    var tileX = tileOfs % 288;
+    var tileY = Math.floor(tileOfs / 288) * 32;
+
+    var markup = "";
+
+    markup += "<div class='clipwrapper'>\n";
+    markup += "  <img class='clip' src='pics/dg_grounds32.gif' \n";
+    markup += "       style='clip:rect(" + tileY + "px " + (tileX + 32) + "px " + (tileY + 32) + "px " + tileX  + "px); " ;
+    markup += "              left:" + (-tileX) + "px ;";
+    markup += "              top:" + (-tileY) + "px'/>\n";
+    markup += "</div>\n";
+
+    return markup;
+}
+
+
+function populateLegend()
+{
+    var markup = "";
+
+    for(var ii = 0; ii < tileInfo.length; ii++) {
+        var tile = tileInfo[ii];
+
+        if (!tile.inLegend)
+            continue;
+
+        markup += ("<div class=\"entry\">"
+                   + spriteMarkup(tile.iconId)
+                   + "<b>" + tile.name + "</b>"
+                   + "</div>");
+    }
+
+    $("#legendBody").html(markup);
+}
+
 function onDocumentLoaded()
 {
     setupContents();
@@ -202,6 +241,8 @@ function onDocumentLoaded()
     edgingTiles = $("#imgEdging")[0];
     penguin = $("#imgPenguin")[0];
     mapPic = $("#imgMap")[0];
+
+    populateLegend();
 
     movePc(0,0);
 };

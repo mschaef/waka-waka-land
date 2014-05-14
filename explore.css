@@ -8,6 +8,9 @@ html {
 
   font-size: 11pt;
   text-align: center;
+
+  overflow-x: hidden;
+  overflow-y: hidden;
 } 
 
 img.resource {
@@ -52,3 +55,41 @@ div.header {
 
   text-align: center;
 } 
+
+div#legend {
+    margin-top: 1em;
+
+    text-align: left;
+
+    border: 1px solid #c0c0c0;
+
+    padding: 0.1em;
+}
+
+div#legend .entry {
+    vertical-align: middle;
+    height: 32px;
+    margin: 0.2em;
+}
+
+div#legend div#legendTitle {
+    text-align: center;
+    font-weight: bold;
+}
+
+.clipwrapper
+{
+     position: relative;
+     height: 32px;
+     width: 32px;
+     display: inline-block;
+}
+
+.clip 
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+
