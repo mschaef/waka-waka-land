@@ -1,8 +1,5 @@
-
 var ctx;
 var birdsEyeCtx;
-var tiles;
-var edgingTiles;
 var penguin;
 var mapPic;
 
@@ -16,20 +13,27 @@ var mapY = 68;
 
 var pcTol = 4;
 
+var tileSets = {};
+
 var tileInfo = [
-    { name: "Void"         , iconId: 2  , passable: false , inLegend: false },
-    { name: "Deep Water"   , iconId: 20 , passable: false , inLegend: true  },
-    { name: "Medium Water" , iconId: 18 , passable: false , inLegend: true  },
-    { name: "Shallow Water", iconId: 15 , passable: true  , inLegend: true  },
-    { name: "Plains"       , iconId: 9  , passable: true  , inLegend: true  },
-    { name: "Lava"         , iconId: 36 , passable: false , inLegend: true  },
-    { name: "Mountain"     , iconId: 117, passable: false , inLegend: true  },
-    { name: "Desert"       , iconId: 12 , passable: true  , inLegend: true  },
-    { name: "Road"         , iconId: 51 , passable: true  , inLegend: true  }
+    { name: "Void"         , tileSet: 'imgTiles' , iconId: 2   , passable: false , inLegend: false },
+    { name: "Deep Water"   , tileSet: 'imgTiles' , iconId: 20  , passable: false , inLegend: true  },
+    { name: "Medium Water" , tileSet: 'imgTiles' , iconId: 18  , passable: false , inLegend: true  },
+    { name: "Shallow Water", tileSet: 'imgTiles' , iconId: 15  , passable: true  , inLegend: true  },
+    { name: "Plains"       , tileSet: 'imgTiles' , iconId: 9   , passable: true  , inLegend: true  },
+    { name: "Lava"         , tileSet: 'imgTiles' , iconId: 36  , passable: false , inLegend: true  },
+    { name: "Mountain"     , tileSet: 'imgTiles' , iconId: 117 , passable: false , inLegend: true  },
+    { name: "Desert"       , tileSet: 'imgTiles' , iconId: 12  , passable: true  , inLegend: true  },
+    { name: "Road"         , tileSet: 'imgTiles' , iconId: 51  , passable: true  , inLegend: true  },
+    { name: "Sign"         , tileSet: 'imgEdging', iconId: 109 , passable: true  , inLegend: true  }
 ];
 
+function elemsBySelector(selector) {
+    return document.querySelectorAll(selector);
+}
+
 function elemBySelector(selector) {
-    var elements = document.querySelectorAll(selector);
+    var elements = elemsBySelector(selector);
 
     if (elements.length == 0) {
         console.error('Expected missing element with selector: ' + selector);
@@ -45,14 +49,18 @@ function elemBySelector(selector) {
 }
 
 
-function drawTile(mX, mY, tileId)
+function drawTile(mX, mY, tileInfo)
 {
+    var tileImage = tileSets[tileInfo.tileSet];
+
+    var tileId = tileInfo.iconId;
+
     var tileOfs = 32 * tileId;
 
-    var tileX = tileOfs % 288;
-    var tileY = Math.floor(tileOfs / 288) * 32;
+    var tileX = tileOfs % tileImage.width;
+    var tileY = Math.floor(tileOfs / tileImage.width) * 32;
 
-    ctx.drawImage(tiles, tileX, tileY, 32, 32, mX * 32, mY * 32, 32, 32);
+    ctx.drawImage(tileImage, tileX, tileY, 32, 32, mX * 32, mY * 32, 32, 32);
 }
 
 function canvasWidth()
@@ -88,7 +96,7 @@ function drawMap(ofsX, ofsY)
     for(var x = 0; x < width; x++) {
         for(var y = 0; y < height; y++) {
 
-            drawTile(x, y, tileInfo[cellAt(mapdata, x + ofsX, y + ofsY, 0)].iconId);
+            drawTile(x, y, tileInfo[cellAt(mapdata, x + ofsX, y + ofsY, 0)]);
 
             var obj = cellAt(mapContents, x + ofsX, y + ofsY);
 
@@ -181,8 +189,7 @@ function addSign(x, y, message)
 {
     mapContents[y][x] = {
         draw: function(oX, oY) {
-            ctx.drawImage(edgingTiles,
-                          160, 416, 32, 32, oX * 32, oY * 32, 32, 32);
+            drawTile(oX, oY, tileInfo[9]);
         },
         action: function() {
             alert("The sign says:\n\n" + message);
@@ -230,11 +237,20 @@ function populateLegend()
     elemBySelector("#legendBody").innerHtml = markup;
 }
 
+function setupTileSets() {
+    var tileImages = elemsBySelector('.tiles');
+
+    for(var ii = 0; ii < tileImages.length; ii++) {
+        tileSets[tileImages[ii].id] = tileImages[ii];
+    }
+}
+
 function onDocumentLoaded()
 {
     setupContents();
+    setupTileSets();
 
-    ctx = elemBySelector('#map').mapCanvas.getContext('2d');
+    ctx = elemBySelector('#map').getContext('2d');
     birdsEyeCtx = elemBySelector('#birdsEye').getContext('2d');
 
     document.onkeydown = function(e) {
@@ -246,8 +262,6 @@ function onDocumentLoaded()
         }
     };
 
-    tiles = elemBySelector("#imgTiles");
-    edgingTiles = elemBySelector("#imgEdging");
     penguin = elemBySelector("#imgPenguin");
     mapPic = elemBySelector("#imgMap");
 
