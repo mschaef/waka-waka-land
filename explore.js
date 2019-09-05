@@ -1,6 +1,6 @@
 
 var ctx;
-var beCtx;
+var birdsEyeCtx;
 var tiles;
 var edgingTiles;
 var penguin;
@@ -102,14 +102,14 @@ function drawMap(ofsX, ofsY)
     ctx.drawImage(penguin, (pcX - mapX) * 32, (pcY - mapY) * 32);
 
 
-    beCtx.drawImage(mapPic, 0, 0);
+    birdsEyeCtx.drawImage(mapPic, 0, 0);
 
-    beCtx.lineWidth = 2;
-    beCtx.strokeStyle = '#ff0000';
+    birdsEyeCtx.lineWidth = 2;
+    birdsEyeCtx.strokeStyle = '#ff0000';
 
-    beCtx.beginPath();
-    beCtx.rect(mapX, mapY, width - 1, height - 1);
-    beCtx.stroke();
+    birdsEyeCtx.beginPath();
+    birdsEyeCtx.rect(mapX, mapY, width - 1, height - 1);
+    birdsEyeCtx.stroke();
 }
 
 function movePc(dX, dY)
@@ -182,7 +182,7 @@ function addSign(x, y, message)
     mapContents[y][x] = {
         draw: function(oX, oY) {
             ctx.drawImage(edgingTiles,
-                          160, 416, 32, 32, oX * 32, oY *32, 32, 32);
+                          160, 416, 32, 32, oX * 32, oY * 32, 32, 32);
         },
         action: function() {
             alert("The sign says:\n\n" + message);
@@ -234,24 +234,17 @@ function onDocumentLoaded()
 {
     setupContents();
 
-    var mapCanvas = elemBySelector('#map');
-    var beCanvas = elemBySelector('#birdsEye');
+    ctx = elemBySelector('#map').mapCanvas.getContext('2d');
+    birdsEyeCtx = elemBySelector('#birdsEye').getContext('2d');
 
     document.onkeydown = function(e) {
-        var kc = e.keyCode;
-
-        if (kc == 38) // up
-            movePc(0, -1);
-        else if (kc == 40) // down
-            movePc(0, 1);
-        else if (kc == 39) // right
-            movePc(1, 0);
-        else if (kc == 37) // left
-            movePc(-1, 0);
+        switch(e.keyCode) {
+        case 38: movePc(0, -1); return; // up
+        case 40: movePc(0, 1) ; return; // down
+        case 39: movePc(1, 0) ; return; // right
+        case 37: movePc(-1, 0); return; // left
+        }
     };
-
-    ctx = mapCanvas.getContext('2d');
-    beCtx = beCanvas.getContext('2d');
 
     tiles = elemBySelector("#imgTiles");
     edgingTiles = elemBySelector("#imgEdging");
