@@ -1,5 +1,4 @@
-body,
-html { 
+body, html {
   margin: 0;
   padding: 0.25em;
 
@@ -11,7 +10,7 @@ html {
 
   overflow-x: hidden;
   overflow-y: hidden;
-} 
+}
 
 img.resource {
     display: none;
@@ -50,11 +49,11 @@ div.header {
   border-bottom-width: 1pt;
 
   clear: both;
-  padding: 0px; 
+  padding: 0px;
   margin: 0px auto;
 
   text-align: center;
-} 
+}
 
 div#legend {
     margin-top: 1em;
@@ -85,11 +84,9 @@ div#legend div#legendTitle {
      display: inline-block;
 }
 
-.clip 
+.clip
 {
     position: absolute;
     top: 0;
     left: 0;
 }
-
-

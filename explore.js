@@ -20,13 +20,29 @@ var tileInfo = [
     { name: "Void"         , iconId: 2  , passable: false , inLegend: false },
     { name: "Deep Water"   , iconId: 20 , passable: false , inLegend: true  },
     { name: "Medium Water" , iconId: 18 , passable: false , inLegend: true  },
-    { name: "Shallow Water", iconId: 15 , passable: true  , inLegend: true  }, 
-    { name: "Plains"       , iconId: 9  , passable: true  , inLegend: true  }, 
+    { name: "Shallow Water", iconId: 15 , passable: true  , inLegend: true  },
+    { name: "Plains"       , iconId: 9  , passable: true  , inLegend: true  },
     { name: "Lava"         , iconId: 36 , passable: false , inLegend: true  },
     { name: "Mountain"     , iconId: 117, passable: false , inLegend: true  },
-    { name: "Desert"       , iconId: 12 , passable: true  , inLegend: true  }, 
+    { name: "Desert"       , iconId: 12 , passable: true  , inLegend: true  },
     { name: "Road"         , iconId: 51 , passable: true  , inLegend: true  }
 ];
+
+function elemBySelector(selector) {
+    var elements = document.querySelectorAll(selector);
+
+    if (elements.length == 0) {
+        console.error('Expected missing element with selector: ' + selector);
+    } else if (elements.length > 0) {
+        if (elements.length > 1) {
+            console.error('Warning: more than one element with selector: ' + selector);
+        }
+
+        return elements[0];
+    }
+
+    return null;
+}
 
 
 function drawTile(mX, mY, tileId)
@@ -36,7 +52,7 @@ function drawTile(mX, mY, tileId)
     var tileX = tileOfs % 288;
     var tileY = Math.floor(tileOfs / 288) * 32;
 
-    ctx.drawImage(tiles, tileX, tileY, 32, 32, mX * 32, mY *32, 32, 32);    
+    ctx.drawImage(tiles, tileX, tileY, 32, 32, mX * 32, mY * 32, 32, 32);
 }
 
 function canvasWidth()
@@ -90,7 +106,7 @@ function drawMap(ofsX, ofsY)
 
     beCtx.lineWidth = 2;
     beCtx.strokeStyle = '#ff0000';
-  
+
     beCtx.beginPath();
     beCtx.rect(mapX, mapY, width - 1, height - 1);
     beCtx.stroke();
@@ -137,7 +153,7 @@ function setupContents()
 
     for(ii = 0; ii < mapdata.length; ii++) {
         var row = [];
-        
+
         for(jj = 0; jj < mapdata[0].length; jj++)
             row.push(null);
 
@@ -158,7 +174,7 @@ function setupContents()
     addSign(177, 45, "Welcome to Gumdrop Island.");
 
     addSign(37, 176, "Welcome to the Capital City.");
-    
+
 }
 
 function addSign(x, y, message)
@@ -166,7 +182,7 @@ function addSign(x, y, message)
     mapContents[y][x] = {
         draw: function(oX, oY) {
             ctx.drawImage(edgingTiles,
-                          160, 416, 32, 32, oX * 32, oY *32, 32, 32);    
+                          160, 416, 32, 32, oX * 32, oY *32, 32, 32);
         },
         action: function() {
             alert("The sign says:\n\n" + message);
@@ -211,17 +227,17 @@ function populateLegend()
                    + "</div>");
     }
 
-    $("#legendBody").html(markup);
+    elemBySelector("#legendBody").innerHtml = markup;
 }
 
 function onDocumentLoaded()
 {
     setupContents();
 
-    var mapCanvas = $('#map');
-    var beCanvas = $('#birdsEye');
+    var mapCanvas = elemBySelector('#map');
+    var beCanvas = elemBySelector('#birdsEye');
 
-    $(document).keydown(function(e) {
+    document.onkeydown = function(e) {
         var kc = e.keyCode;
 
         if (kc == 38) // up
@@ -232,20 +248,19 @@ function onDocumentLoaded()
             movePc(1, 0);
         else if (kc == 37) // left
             movePc(-1, 0);
-    });
+    };
 
-    ctx = mapCanvas[0].getContext('2d');
-    beCtx = beCanvas[0].getContext('2d');
+    ctx = mapCanvas.getContext('2d');
+    beCtx = beCanvas.getContext('2d');
 
-    tiles = $("#imgTiles")[0];
-    edgingTiles = $("#imgEdging")[0];
-    penguin = $("#imgPenguin")[0];
-    mapPic = $("#imgMap")[0];
+    tiles = elemBySelector("#imgTiles");
+    edgingTiles = elemBySelector("#imgEdging");
+    penguin = elemBySelector("#imgPenguin");
+    mapPic = elemBySelector("#imgMap");
 
     populateLegend();
 
     movePc(0,0);
 };
 
-$(window).load( onDocumentLoaded);
-
+document.addEventListener('DOMContentLoaded', onDocumentLoaded);
