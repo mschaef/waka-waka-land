@@ -22,71 +22,28 @@ div#page_wrap {
   margin: 0 auto;
 }
 
-div.main {
-  padding: 0.25em;
-  padding-right: 0.75em;
-  float: left;
+.content {
+    display: flex;
+    flex-direction: column;
 }
 
-div.content {
+.main {
+    padding: 0em;
+    padding-bottom: 1em;
+
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
 }
 
-div.sidebar {
-  padding: 0.25em;
-
-  float: right;
-
-  padding-left: 1em;
-  padding-right: 1em;
-}
-
-div.header {
-  font-size: 18pt;
-  font-weight: bold;
-
+h1 {
   border-style: none;
   border-bottom-style: solid;
   border-bottom-width: 1pt;
 
-  clear: both;
-  padding: 0px;
-  margin: 0px auto;
-
   text-align: center;
 }
 
-div#legend {
-    margin-top: 1em;
-
-    text-align: left;
-
-    border: 1px solid #c0c0c0;
-
-    padding: 0.1em;
-}
-
-div#legend .entry {
-    vertical-align: middle;
-    height: 32px;
-    margin: 0.2em;
-}
-
-div#legend div#legendTitle {
-    text-align: center;
-    font-weight: bold;
-}
-
-.clipwrapper
-{
-     position: relative;
-     height: 32px;
-     width: 32px;
-     display: inline-block;
-}
-
-.clip
-{
-    position: absolute;
-    top: 0;
-    left: 0;
+#birdseye {
+    padding-left: 15px;
 }

@@ -16,16 +16,16 @@ var pcTol = 4;
 var tileSets = {};
 
 var tileInfo = [
-    { name: "Void"         , tileSet: 'imgTiles' , iconId: 2   , passable: false , inLegend: false },
-    { name: "Deep Water"   , tileSet: 'imgTiles' , iconId: 20  , passable: false , inLegend: true  },
-    { name: "Medium Water" , tileSet: 'imgTiles' , iconId: 18  , passable: false , inLegend: true  },
-    { name: "Shallow Water", tileSet: 'imgTiles' , iconId: 15  , passable: true  , inLegend: true  },
-    { name: "Plains"       , tileSet: 'imgTiles' , iconId: 9   , passable: true  , inLegend: true  },
-    { name: "Lava"         , tileSet: 'imgTiles' , iconId: 36  , passable: false , inLegend: true  },
-    { name: "Mountain"     , tileSet: 'imgTiles' , iconId: 117 , passable: false , inLegend: true  },
-    { name: "Desert"       , tileSet: 'imgTiles' , iconId: 12  , passable: true  , inLegend: true  },
-    { name: "Road"         , tileSet: 'imgTiles' , iconId: 51  , passable: true  , inLegend: true  },
-    { name: "Sign"         , tileSet: 'imgEdging', iconId: 109 , passable: true  , inLegend: true  }
+    { name: "Void"         , tileSet: 'imgTiles' , iconId: 2   , passable: false },
+    { name: "Deep Water"   , tileSet: 'imgTiles' , iconId: 20  , passable: false },
+    { name: "Medium Water" , tileSet: 'imgTiles' , iconId: 18  , passable: false },
+    { name: "Shallow Water", tileSet: 'imgTiles' , iconId: 15  , passable: true  },
+    { name: "Plains"       , tileSet: 'imgTiles' , iconId: 9   , passable: true  },
+    { name: "Lava"         , tileSet: 'imgTiles' , iconId: 36  , passable: false },
+    { name: "Mountain"     , tileSet: 'imgTiles' , iconId: 117 , passable: false },
+    { name: "Desert"       , tileSet: 'imgTiles' , iconId: 12  , passable: true  },
+    { name: "Road"         , tileSet: 'imgTiles' , iconId: 51  , passable: true  },
+    { name: "Sign"         , tileSet: 'imgEdging', iconId: 109 , passable: true  }
 ];
 
 function elemsBySelector(selector) {
@@ -198,45 +198,6 @@ function addSign(x, y, message)
     };
 }
 
-function spriteMarkup(tileId)
-{
-    var tileOfs = 32 * tileId;
-
-    var tileX = tileOfs % 288;
-    var tileY = Math.floor(tileOfs / 288) * 32;
-
-    var markup = "";
-
-    markup += "<div class='clipwrapper'>\n";
-    markup += "  <img class='clip' src='pics/dg_grounds32.gif' \n";
-    markup += "       style='clip:rect(" + tileY + "px " + (tileX + 32) + "px " + (tileY + 32) + "px " + tileX  + "px); " ;
-    markup += "              left:" + (-tileX) + "px ;";
-    markup += "              top:" + (-tileY) + "px'/>\n";
-    markup += "</div>\n";
-
-    return markup;
-}
-
-
-function populateLegend()
-{
-    var markup = "";
-
-    for(var ii = 0; ii < tileInfo.length; ii++) {
-        var tile = tileInfo[ii];
-
-        if (!tile.inLegend)
-            continue;
-
-        markup += ("<div class=\"entry\">"
-                   + spriteMarkup(tile.iconId)
-                   + "<b>" + tile.name + "</b>"
-                   + "</div>");
-    }
-
-    elemBySelector("#legendBody").innerHtml = markup;
-}
-
 function setupTileSets() {
     var tileImages = elemsBySelector('.tiles');
 
@@ -264,8 +225,6 @@ function onDocumentLoaded()
 
     penguin = elemBySelector("#imgPenguin");
     mapPic = elemBySelector("#imgMap");
-
-    populateLegend();
 
     movePc(0,0);
 };
