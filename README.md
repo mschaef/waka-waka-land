@@ -24,3 +24,10 @@ attributes specified in the `tileInfo` array in
 file is translated into JSON using [`gif2js.c`](https://github.com/mschaef/waka-waka-land/blob/master/gif2js.c).
 Other geographical information (location and text of signs, etc.) is defined in the main
 JavaScript code.
+
+# Licensing and Copyright
+
+Copyright (c) Michael Schaeffer
+
+Licened under the Eclipse Public Licence v2.0, found at the root of
+this repository in the [`LICENSE`](LICENSE) file.
