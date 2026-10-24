@@ -21,7 +21,7 @@ var pcY = 79;
 var mapX = 184;
 var mapY = 68;
 
-var pcTol = 4;
+var MAP_SCROLL_THRESHOLD = 4;
 
 var tileSets = {};
 
@@ -59,11 +59,11 @@ function elemBySelector(selector) {
 }
 
 
-function drawTile(mX, mY, tileInfo)
+function drawTile(mX, mY, tile)
 {
-    var tileImage = tileSets[tileInfo.tileSet];
+    var tileImage = tileSets[tile.tileSet];
 
-    var tileId = tileInfo.iconId;
+    var tileId = tile.iconId;
 
     var tileOfs = 32 * tileId;
 
@@ -83,7 +83,7 @@ function canvasHeight()
     return Math.floor(ctx.canvas.height / 32);
 }
 
-function cellAt(map, x, y, defaultCell)
+function cellAt(map, x, y)
 {
     var row = map[y];
 
@@ -92,23 +92,44 @@ function cellAt(map, x, y, defaultCell)
     if (row != null)
         cell = row[x];
 
-    if (cell == null)
-        cell = defaultCell;
-
     return cell;
 }
 
-function drawMap(ofsX, ofsY)
+function mapTileAt(map, x, y) {
+    return tileInfo[cellAt(map, x, y) || 0];
+}
+
+function maybeScrollMap() {
+    if (pcX <  (mapX + MAP_SCROLL_THRESHOLD)) {
+        mapX = mapX - MAP_SCROLL_THRESHOLD;
+    }
+
+    if (pcY < (mapY + MAP_SCROLL_THRESHOLD)) {
+        mapY = mapY - MAP_SCROLL_THRESHOLD;
+    }
+
+    if (pcX > (mapX + canvasWidth() - MAP_SCROLL_THRESHOLD)) {
+        mapX = mapX + MAP_SCROLL_THRESHOLD;
+    }
+
+    if (pcY > (mapY + canvasHeight() - MAP_SCROLL_THRESHOLD)) {
+        mapY = mapY + MAP_SCROLL_THRESHOLD;
+    }
+}
+
+function drawMap()
 {
+    maybeScrollMap();
+
     var width = canvasWidth();
     var height = canvasHeight();
 
     for(var x = 0; x < width; x++) {
         for(var y = 0; y < height; y++) {
 
-            drawTile(x, y, tileInfo[cellAt(mapdata, x + ofsX, y + ofsY, 0)]);
+            drawTile(x, y, mapTileAt(mapdata, x + mapX, y + mapY));
 
-            var obj = cellAt(mapContents, x + ofsX, y + ofsY);
+            var obj = cellAt(mapContents, x + mapX, y + mapY);
 
             if (obj != null) {
                 obj.draw(x, y);
@@ -118,7 +139,6 @@ function drawMap(ofsX, ofsY)
     }
 
     ctx.drawImage(penguin, (pcX - mapX) * 32, (pcY - mapY) * 32);
-
 
     birdsEyeCtx.drawImage(mapPic, 0, 0);
 
@@ -135,32 +155,19 @@ function movePc(dX, dY)
     var nX = pcX + dX;
     var nY = pcY + dY;
 
-    if (!tileInfo[cellAt(mapdata, nX, nY, 0)].passable)
-        return;
+    if (mapTileAt(mapdata, nX, nY).passable) {
+        var obj = cellAt(mapContents, nX, nY);
 
-    var obj = cellAt(mapContents, nX, nY);
+        if (obj != null) {
+            if(!obj.action())
+                return ;
+        }
 
-    if (obj != null) {
-        if(!obj.action())
-            return ;
+        pcX = nX;
+        pcY = nY;
     }
 
-    pcX = nX;
-    pcY = nY;
-
-    if (pcX <  (mapX + pcTol))
-        mapX = mapX - pcTol;
-
-    if (pcY < (mapY + pcTol))
-        mapY = mapY - pcTol;
-
-    if (pcX > (mapX + canvasWidth() - pcTol))
-        mapX = mapX + pcTol;
-
-    if (pcY > (mapY + canvasHeight() - pcTol))
-        mapY = mapY + pcTol;
-
-    drawMap(mapX, mapY);
+    drawMap();
 }
 
 function setupContents()
