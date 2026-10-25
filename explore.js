@@ -8,12 +8,12 @@
 //
 // You must not remove this notice, or any other, from this software.
 
-var ctx;
-var birdsEyeCtx;
+var ctxMap;
+var ctxBirdsEye;
 var penguin;
 var mapPic;
 
-var mapContents;
+var mapItems;
 
 var pcX = 195;
 var pcY = 79;
@@ -70,17 +70,17 @@ function drawTile(mX, mY, tile)
     var tileX = tileOfs % tileImage.width;
     var tileY = Math.floor(tileOfs / tileImage.width) * 32;
 
-    ctx.drawImage(tileImage, tileX, tileY, 32, 32, mX * 32, mY * 32, 32, 32);
+    ctxMap.drawImage(tileImage, tileX, tileY, 32, 32, mX * 32, mY * 32, 32, 32);
 }
 
 function canvasWidth()
 {
-    return Math.floor(ctx.canvas.width / 32);
+    return Math.floor(ctxMap.canvas.width / 32);
 }
 
 function canvasHeight()
 {
-    return Math.floor(ctx.canvas.height / 32);
+    return Math.floor(ctxMap.canvas.height / 32);
 }
 
 function cellAt(map, x, y)
@@ -129,7 +129,7 @@ function drawMap()
 
             drawTile(x, y, mapTileAt(mapdata, x + mapX, y + mapY));
 
-            var obj = cellAt(mapContents, x + mapX, y + mapY);
+            var obj = cellAt(mapItems, x + mapX, y + mapY);
 
             if (obj != null) {
                 obj.draw(x, y);
@@ -138,16 +138,16 @@ function drawMap()
         }
     }
 
-    ctx.drawImage(penguin, (pcX - mapX) * 32, (pcY - mapY) * 32);
+    ctxMap.drawImage(penguin, (pcX - mapX) * 32, (pcY - mapY) * 32);
 
-    birdsEyeCtx.drawImage(mapPic, 0, 0);
+    ctxBirdsEye.drawImage(mapPic, 0, 0);
 
-    birdsEyeCtx.lineWidth = 2;
-    birdsEyeCtx.strokeStyle = '#ff0000';
+    ctxBirdsEye.lineWidth = 2;
+    ctxBirdsEye.strokeStyle = '#ff0000';
 
-    birdsEyeCtx.beginPath();
-    birdsEyeCtx.rect(mapX, mapY, width - 1, height - 1);
-    birdsEyeCtx.stroke();
+    ctxBirdsEye.beginPath();
+    ctxBirdsEye.rect(mapX, mapY, width - 1, height - 1);
+    ctxBirdsEye.stroke();
 }
 
 function movePc(dX, dY)
@@ -156,7 +156,7 @@ function movePc(dX, dY)
     var nY = pcY + dY;
 
     if (mapTileAt(mapdata, nX, nY).passable) {
-        var obj = cellAt(mapContents, nX, nY);
+        var obj = cellAt(mapItems, nX, nY);
 
         if (obj != null) {
             if(!obj.action())
@@ -172,7 +172,7 @@ function movePc(dX, dY)
 
 function setupContents()
 {
-    mapContents = [];
+    mapItems = [];
 
     var ii, jj;
 
@@ -182,29 +182,27 @@ function setupContents()
         for(jj = 0; jj < mapdata[0].length; jj++)
             row.push(null);
 
-        mapContents.push(row);
+        mapItems.push(row);
     }
 
-    addSign(192, 75, "Here are some mountains.");
-    addSign(194, 79, "Welcome to Wakawaka land!\n\nPlease enjoy your stay.");
+    addItem(192, 75, makeSign("Here are some mountains."));
+    addItem(194, 79, makeSign("Welcome to Wakawaka land!\n\nPlease enjoy your stay."));
 
-    addSign(194, 95, "Mount Greenland");
+    addItem(194, 95, makeSign("Mount Greenland"));
 
-    addSign(177, 79, "Maka-luka Gulf");
-    addSign(122, 72, "Mako-Maki Gulf");
-    addSign(250, 97, "Future site of Fish Town.");
-    addSign(225, 95, "Calm Beach");
-    addSign(254, 122, "Future site of Beach Town.");
+    addItem(177, 79, makeSign("Maka-luka Gulf"));
+    addItem(122, 72, makeSign("Mako-Maki Gulf"));
+    addItem(250, 97, makeSign("Future site of Fish Town."));
+    addItem(225, 95, makeSign("Calm Beach"));
+    addItem(254, 122, makeSign("Future site of Beach Town."));
 
-    addSign(177, 45, "Welcome to Gumdrop Island.");
+    addItem(177, 45, makeSign("Welcome to Gumdrop Island."));
 
-    addSign(37, 176, "Welcome to the Capital City.");
-
+    addItem(37, 176, makeSign("Welcome to the Capital City."));
 }
 
-function addSign(x, y, message)
-{
-    mapContents[y][x] = {
+function makeSign(message) {
+    return {
         draw: function(oX, oY) {
             drawTile(oX, oY, tileInfo[9]);
         },
@@ -213,6 +211,11 @@ function addSign(x, y, message)
             return false;
         }
     };
+}
+
+function addItem(x, y, item)
+{
+    mapItems[y][x] = item;
 }
 
 function setupTileSets() {
@@ -228,8 +231,8 @@ function onDocumentLoaded()
     setupContents();
     setupTileSets();
 
-    ctx = elemBySelector('#map').getContext('2d');
-    birdsEyeCtx = elemBySelector('#birdsEye').getContext('2d');
+    ctxMap = elemBySelector('#map').getContext('2d');
+    ctxBirdsEye = elemBySelector('#birdsEye').getContext('2d');
 
     document.onkeydown = function(e) {
         switch(e.keyCode) {
