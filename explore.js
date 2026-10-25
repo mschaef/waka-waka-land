@@ -155,12 +155,14 @@ function movePc(dX, dY)
     var nX = pcX + dX;
     var nY = pcY + dY;
 
-    if (mapTileAt(mapdata, nX, nY).passable) {
+    let passable = mapTileAt(mapdata, nX, nY).passable;
+
+    if (passable) {
         var obj = cellAt(mapItems, nX, nY);
 
         if (obj != null) {
             if(!obj.action())
-                return ;
+                return true;
         }
 
         pcX = nX;
@@ -168,6 +170,8 @@ function movePc(dX, dY)
     }
 
     drawMap();
+
+    return passable;
 }
 
 function setupContents()
@@ -226,6 +230,30 @@ function setupTileSets() {
     }
 }
 
+function navigateUp() {
+    if (!movePc(0, -1)) {
+        movePc(1, -1) || movePc(-1, -1);
+    }
+}
+
+function navigateDown() {
+    if (!movePc(0, 1)) {
+        movePc(1, 1) || movePc(-1, 1);
+    }
+}
+
+function navigateLeft() {
+    if (!movePc(1, 0)) {
+        movePc(1, 1) || movePc(1, -1);
+    }
+}
+
+function navigateRight() {
+    if (!movePc(-1, 0)) {
+        movePc(-1, 0) || movePc(-1, -1);
+    }
+}
+
 function onDocumentLoaded()
 {
     setupContents();
@@ -236,17 +264,17 @@ function onDocumentLoaded()
 
     document.onkeydown = function(e) {
         switch(e.keyCode) {
-        case 38: movePc(0, -1); return; // up
-        case 40: movePc(0, 1) ; return; // down
-        case 39: movePc(1, 0) ; return; // right
-        case 37: movePc(-1, 0); return; // left
+        case 38: navigateUp();    break;
+        case 40: navigateDown();  break;
+        case 39: navigateLeft();  break;
+        case 37: navigateRight(); break;
         }
     };
 
     penguin = elemBySelector("#imgPenguin");
     mapPic = elemBySelector("#imgMap");
 
-    movePc(0,0);
+    drawMap();
 };
 
 document.addEventListener('DOMContentLoaded', onDocumentLoaded);
